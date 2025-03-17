@@ -1,22 +1,19 @@
 import 'package:chatwithbloc/app.dart';
+import 'package:chatwithbloc/core/di/injection.dart';
+import 'package:chatwithbloc/core/utils/app_global_observer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat with Gemini',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const App(),
-    );
+void main() async {
+  if (kDebugMode) {
+    await dotenv.load(fileName: ".dev.env");
+    Bloc.observer = AppGlobalBlocObserver();
+  } else {
+    await dotenv.load(fileName: ".env");
   }
+  await configureDependencies();
+
+  runApp(const MyApp());
 }
