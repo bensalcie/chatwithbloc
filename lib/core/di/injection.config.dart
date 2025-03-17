@@ -30,8 +30,8 @@ extension GetItInjectableX on _i174.GetIt {
         gh<String>(instanceName: 'ApiKey'),
       ),
     );
-    gh.factory<_i240.GeminiBlocBloc>(
-      () => _i240.GeminiBlocBloc(gh<_i788.GenerativeModelService>()),
+    gh.factory<_i240.GeminiBloc>(
+      () => _i240.GeminiBloc(gh<_i788.GenerativeModelService>()),
     );
     return this;
   }

@@ -1,5 +1,7 @@
+import 'package:chatwithbloc/home/bloc/gemini_bloc_bloc.dart';
 import 'package:chatwithbloc/home/widgets/app_edit_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder, ReadContext;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,15 +21,63 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Chat with Bloc'),
       ),
-      body: Center(
+      body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text('You have pushed the button this many times:'),
+            BlocBuilder<GeminiBloc, GeminiBlocState>(
+              builder: (context, state) {
+                var latestchats = chats;
+                if (state is GeminiBlocSuccess) {
+                  latestchats = state.latestChat;
+                }
+                return latestchats.isNotEmpty
+                    ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: latestchats.length,
+                      itemBuilder: (context, index) {
+                        final chat = latestchats[index];
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              chat.issender
+                                  ? Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.person_2_rounded,
+                                      size: 32,
+                                    ),
+                                  )
+                                  : const SizedBox.shrink(),
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  chat.message,
+                                  textAlign:
+                                      chat.issender
+                                          ? TextAlign.start
+                                          : TextAlign.end,
+                                ),
+                              ),
+                              !chat.issender
+                                  ? Icon(Icons.personal_injury, size: 32)
+                                  : const SizedBox.shrink(),
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                    : Center(child: Text('Ask Gemini Anything to get started'));
+              },
+            ),
           ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       floatingActionButton: ValueListenableBuilder(
         valueListenable: _isFabVisible,
         builder: (context, value, child) {
@@ -43,7 +93,28 @@ class _HomePageState extends State<HomePage> {
                         inputHint: 'Ask me Anything...',
                       ),
                     ),
-                    const IconButton(onPressed: null, icon: Icon(Icons.send)),
+                    BlocBuilder<GeminiBloc, GeminiBlocState>(
+                      builder: (context, state) {
+                        if (state is GeminiBlocLoading) {
+                          return const CircularProgressIndicator();
+                        }
+                        return IconButton(
+                          onPressed: () {
+                            final chat = chatInputController.text;
+                            if (chat.isNotEmpty) {
+                              context.read<GeminiBloc>().add(
+                                AskGemini(prompt: chat),
+                              );
+                              // chats.add(
+                              //   ChatModel(message: chat, issender: true),
+                              // );
+                              chatInputController.clear();
+                            }
+                          },
+                          icon: Icon(Icons.send),
+                        );
+                      },
+                    ),
                     const SizedBox(width: 10),
                   ],
                 ),

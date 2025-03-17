@@ -13,9 +13,9 @@ part 'gemini_bloc_state.dart';
 final List<ChatModel> chats = [];
 
 @injectable
-class GeminiBlocBloc extends Bloc<GeminiBlocEvent, GeminiBlocState> {
-  GenerativeModelService _generativeModelService;
-  GeminiBlocBloc(this._generativeModelService) : super(GeminiBlocInitial()) {
+class GeminiBloc extends Bloc<GeminiBlocEvent, GeminiBlocState> {
+  final GenerativeModelService _generativeModelService;
+  GeminiBloc(this._generativeModelService) : super(GeminiBlocInitial()) {
     on<AskGemini>(_onAskGemini);
   }
 
@@ -35,7 +35,7 @@ class GeminiBlocBloc extends Bloc<GeminiBlocEvent, GeminiBlocState> {
 
       emit(GeminiBlocSuccess(latestChat: chats.toSet().toList()));
     } catch (e) {
-      emit(GeminiBlocError(errormessage: 'Something went wrong'));
+      emit(GeminiBlocError(errormessage: 'Something went wrong $e'));
     }
   }
 }

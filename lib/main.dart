@@ -1,6 +1,7 @@
 import 'package:chatwithbloc/app.dart';
 import 'package:chatwithbloc/core/di/injection.dart';
 import 'package:chatwithbloc/core/utils/app_global_observer.dart';
+import 'package:chatwithbloc/home/bloc/gemini_bloc_bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,5 +16,10 @@ void main() async {
   }
   await configureDependencies();
 
-  runApp(const MyApp());
+  runApp(
+    BlocProvider(
+      create: (context) => getIt<GeminiBloc>(),
+      child: const MyApp(),
+    ),
+  );
 }
