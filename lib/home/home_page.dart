@@ -12,12 +12,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final TextEditingController chatInputController = TextEditingController();
-
   final ValueNotifier<bool> _isFabVisible = ValueNotifier(true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          InkWell(
+            onTap: () => context.read<GeminiBloc>().add(ClearChat()),
+            child: Icon(Icons.close, size: 35),
+          ),
+        ],
+        actionsPadding: EdgeInsets.all(12),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text('Chat with Bloc'),
       ),

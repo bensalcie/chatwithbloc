@@ -17,6 +17,7 @@ class GeminiBloc extends Bloc<GeminiBlocEvent, GeminiBlocState> {
   final GenerativeModelService _generativeModelService;
   GeminiBloc(this._generativeModelService) : super(GeminiBlocInitial()) {
     on<AskGemini>(_onAskGemini);
+    on<ClearChat>(_onClearChat);
   }
 
   FutureOr<void> _onAskGemini(
@@ -37,5 +38,11 @@ class GeminiBloc extends Bloc<GeminiBlocEvent, GeminiBlocState> {
     } catch (e) {
       emit(GeminiBlocError(errormessage: 'Something went wrong $e'));
     }
+  }
+
+  FutureOr<void> _onClearChat(ClearChat event, Emitter<GeminiBlocState> emit) {
+    emit(GeminiBlocLoading());
+    chats.clear();
+    emit(GeminiBlocSuccess(latestChat: []));
   }
 }
