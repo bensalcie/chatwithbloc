@@ -1,3 +1,4 @@
+import 'package:chatwithbloc/home/widgets/app_edit_text.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,6 +9,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final TextEditingController chatInputController = TextEditingController();
+
+  final ValueNotifier<bool> _isFabVisible = ValueNotifier(true);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,10 +27,29 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: null,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: _isFabVisible,
+        builder: (context, value, child) {
+          return value
+              ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: AppEditText(
+                        controller: chatInputController,
+                        type: TextInputType.text,
+                        inputHint: 'Ask me Anything...',
+                      ),
+                    ),
+                    const IconButton(onPressed: null, icon: Icon(Icons.send)),
+                    const SizedBox(width: 10),
+                  ],
+                ),
+              )
+              : const SizedBox.shrink();
+        },
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
