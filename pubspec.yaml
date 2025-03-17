@@ -35,9 +35,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_bloc: ^9.1.0
-  flutter_gemini: ^3.0.0
+  google_generative_ai: ^0.4.6
+
   injectable: ^2.5.0
   get_it: ^8.0.3
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
