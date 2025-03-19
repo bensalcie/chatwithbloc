@@ -12,7 +12,6 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
-import '../../home/bloc/gemini_bloc_bloc.dart' as _i240;
 import '../../home/data/gemini_model_service.dart' as _i788;
 import 'module_injection.dart' as _i237;
 
@@ -29,9 +28,6 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModules.generativeModelService(
         gh<String>(instanceName: 'ApiKey'),
       ),
-    );
-    gh.factory<_i240.GeminiBloc>(
-      () => _i240.GeminiBloc(gh<_i788.GenerativeModelService>()),
     );
     return this;
   }
